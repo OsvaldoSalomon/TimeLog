@@ -1,4 +1,4 @@
-package com.timelogsimple.timelogsimplified.constants;
+package com.timelog.timelog.constants;
 
 public class TimeLogConstants {
 

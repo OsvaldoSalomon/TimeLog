@@ -1,4 +1,4 @@
-package com.timelogsimple.timelogsimplified.config;
+package com.timelog.timelog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

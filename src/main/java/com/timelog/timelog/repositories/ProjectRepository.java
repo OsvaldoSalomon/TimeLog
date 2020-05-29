@@ -1,7 +1,7 @@
-package com.timelogsimple.timelogsimplified.repositories;
+package com.timelog.timelog.repositories;
 
 
-import com.timelogsimple.timelogsimplified.models.Project;
+import com.timelog.timelog.models.Project;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

@@ -1,4 +1,4 @@
-package com.timelogsimple.timelogsimplified.queries;
+package com.timelog.timelog.queries;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.Query;

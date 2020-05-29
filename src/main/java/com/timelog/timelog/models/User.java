@@ -1,4 +1,4 @@
-package com.timelogsimple.timelogsimplified.models;
+package com.timelog.timelog.models;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;

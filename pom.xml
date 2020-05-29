@@ -11,7 +11,7 @@
 	<groupId>com.timelogsimple</groupId>
 	<artifactId>timelogsimplified</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>timelogsimplified</name>
+	<name>timelog</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

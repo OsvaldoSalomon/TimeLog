@@ -1,11 +1,11 @@
-package com.timelogsimple.timelogsimplified.controller;
+package com.timelog.timelog.controller;
 
-import com.timelogsimple.timelogsimplified.models.Company;
-import com.timelogsimple.timelogsimplified.models.Project;
-import com.timelogsimple.timelogsimplified.models.User;
-import com.timelogsimple.timelogsimplified.repositories.CompanyRepository;
-import com.timelogsimple.timelogsimplified.repositories.ProjectRepository;
-import com.timelogsimple.timelogsimplified.repositories.UserRepository;
+import com.timelog.timelog.models.Company;
+import com.timelog.timelog.models.Project;
+import com.timelog.timelog.models.User;
+import com.timelog.timelog.repositories.CompanyRepository;
+import com.timelog.timelog.repositories.ProjectRepository;
+import com.timelog.timelog.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

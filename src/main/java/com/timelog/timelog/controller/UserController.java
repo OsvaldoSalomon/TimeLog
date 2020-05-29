@@ -1,8 +1,8 @@
-package com.timelogsimple.timelogsimplified.controller;
+package com.timelog.timelog.controller;
 
-import com.timelogsimple.timelogsimplified.exceptions.UserNotFoundException;
-import com.timelogsimple.timelogsimplified.models.User;
-import com.timelogsimple.timelogsimplified.repositories.UserRepository;
+import com.timelog.timelog.exceptions.UserNotFoundException;
+import com.timelog.timelog.models.User;
+import com.timelog.timelog.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.timelogsimple.timelogsimplified.constants.TimeLogConstants.*;
+import static com.timelog.timelog.constants.TimeLogConstants.*;
 
 @RestController
 @RequestMapping(TIME_LOG_V1_PATH)

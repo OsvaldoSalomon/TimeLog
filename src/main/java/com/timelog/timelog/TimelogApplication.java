@@ -1,14 +1,14 @@
-package com.timelogsimple.timelogsimplified;
+package com.timelog.timelog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
-public class TimelogsimplifiedApplication {
+public class TimelogApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TimelogsimplifiedApplication.class, args);
+		SpringApplication.run(TimelogApplication.class, args);
 	}
 
 }

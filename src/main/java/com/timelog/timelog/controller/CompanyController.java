@@ -1,8 +1,8 @@
-package com.timelogsimple.timelogsimplified.controller;
+package com.timelog.timelog.controller;
 
-import com.timelogsimple.timelogsimplified.exceptions.CompanyNotFoundException;
-import com.timelogsimple.timelogsimplified.models.Company;
-import com.timelogsimple.timelogsimplified.repositories.CompanyRepository;
+import com.timelog.timelog.exceptions.CompanyNotFoundException;
+import com.timelog.timelog.models.Company;
+import com.timelog.timelog.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.timelogsimple.timelogsimplified.constants.TimeLogConstants.COMPANIES_PATH;
-import static com.timelogsimple.timelogsimplified.constants.TimeLogConstants.TIME_LOG_V1_PATH;
+import static com.timelog.timelog.constants.TimeLogConstants.COMPANIES_PATH;
+import static com.timelog.timelog.constants.TimeLogConstants.TIME_LOG_V1_PATH;
 
 @RestController
 @RequestMapping(TIME_LOG_V1_PATH)

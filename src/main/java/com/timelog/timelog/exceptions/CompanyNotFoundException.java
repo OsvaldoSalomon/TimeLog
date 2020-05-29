@@ -1,4 +1,4 @@
-package com.timelogsimple.timelogsimplified.exceptions;
+package com.timelog.timelog.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

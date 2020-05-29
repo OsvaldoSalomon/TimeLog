@@ -1,8 +1,8 @@
-package com.timelogsimple.timelogsimplified.controller;
+package com.timelog.timelog.controller;
 
-import com.timelogsimple.timelogsimplified.exceptions.ProjectNotFoundException;
-import com.timelogsimple.timelogsimplified.models.Project;
-import com.timelogsimple.timelogsimplified.repositories.ProjectRepository;
+import com.timelog.timelog.exceptions.ProjectNotFoundException;
+import com.timelog.timelog.models.Project;
+import com.timelog.timelog.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.timelogsimple.timelogsimplified.constants.TimeLogConstants.*;
+import static com.timelog.timelog.constants.TimeLogConstants.*;
 
 @RestController
 @RequestMapping(TIME_LOG_V1_PATH)
