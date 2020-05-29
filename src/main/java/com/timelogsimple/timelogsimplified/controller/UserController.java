@@ -1,6 +1,6 @@
 package com.timelogsimple.timelogsimplified.controller;
 
-import com.timelogsimple.timelogsimplified.UserNotFoundException;
+import com.timelogsimple.timelogsimplified.exceptions.UserNotFoundException;
 import com.timelogsimple.timelogsimplified.models.User;
 import com.timelogsimple.timelogsimplified.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.timelogsimple.timelogsimplified;
+package com.timelogsimple.timelogsimplified.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,3 +20,5 @@ public class SwaggerConfig {
                 .build();
     }
 }
+
+

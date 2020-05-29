@@ -1,6 +1,6 @@
 package com.timelogsimple.timelogsimplified.controller;
 
-import com.timelogsimple.timelogsimplified.ProjectNotFoundException;
+import com.timelogsimple.timelogsimplified.exceptions.ProjectNotFoundException;
 import com.timelogsimple.timelogsimplified.models.Project;
 import com.timelogsimple.timelogsimplified.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;

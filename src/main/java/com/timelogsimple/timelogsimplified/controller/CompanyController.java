@@ -1,6 +1,6 @@
 package com.timelogsimple.timelogsimplified.controller;
 
-import com.timelogsimple.timelogsimplified.CompanyNotFoundException;
+import com.timelogsimple.timelogsimplified.exceptions.CompanyNotFoundException;
 import com.timelogsimple.timelogsimplified.models.Company;
 import com.timelogsimple.timelogsimplified.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
