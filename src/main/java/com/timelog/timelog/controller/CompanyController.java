@@ -3,6 +3,7 @@ package com.timelog.timelog.controller;
 import com.timelog.timelog.exceptions.CompanyNotFoundException;
 import com.timelog.timelog.models.Company;
 import com.timelog.timelog.repositories.CompanyRepository;
+import com.timelog.timelog.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ import static com.timelog.timelog.constants.TimeLogConstants.TIME_LOG_V1_PATH;
 public class CompanyController {
 
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private CompanyService companyService;
 
     @Autowired
     public CompanyController(CompanyRepository companyRepository) {
@@ -55,4 +59,17 @@ public class CompanyController {
         }
         return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
     }
+
+//    @PostMapping(path = COMPANIES_PATH)
+//    public ResponseEntity<Company> addCompany(@RequestBody Company company) {
+//        return companyRepository.save(company);
+//    }
+
+    @PostMapping(COMPANIES_PATH)
+    public @ResponseBody ResponseEntity<Company> addCompany(@RequestBody Company company) {
+        companyService.saveCompany(company);
+        return new ResponseEntity("POST Response", HttpStatus.OK);
+    }
+
+
 }
