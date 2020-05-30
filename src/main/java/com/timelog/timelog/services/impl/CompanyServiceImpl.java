@@ -12,8 +12,21 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
+
     @Override
     public void saveCompany(Company company) {
         companyRepository.save(company);
     }
+
+//    @Override
+//    public void deleteCompany(String id) {
+//        companyRepository.deleteById(id);
+//    }
+//
+//    @Override
+//    public Company findById(String id) {
+//        return null;
+//    }
+
+
 }

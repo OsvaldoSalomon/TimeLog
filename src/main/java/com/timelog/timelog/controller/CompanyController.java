@@ -60,16 +60,30 @@ public class CompanyController {
         return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
     }
 
-//    @PostMapping(path = COMPANIES_PATH)
-//    public ResponseEntity<Company> addCompany(@RequestBody Company company) {
-//        return companyRepository.save(company);
-//    }
 
     @PostMapping(COMPANIES_PATH)
     public @ResponseBody ResponseEntity<Company> addCompany(@RequestBody Company company) {
         companyService.saveCompany(company);
-        return new ResponseEntity("POST Response", HttpStatus.OK);
+        return new ResponseEntity(company, HttpStatus.OK);
     }
+
+    @DeleteMapping(COMPANIES_PATH + "/{id}")
+    public void deleteCompany(@PathVariable String id) {
+        companyRepository.deleteById(id);
+    }
+
+    @PutMapping(COMPANIES_PATH + "/{id}")
+    public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable("id") String id) {
+
+        Optional<Company> optionalResponse = companyRepository.findById(id);
+        if (!optionalResponse.isPresent()) {
+
+            throw new CompanyNotFoundException(id);
+        }
+        companyService.saveCompany(company);
+        return new ResponseEntity<>(company, HttpStatus.OK);
+    }
+
 
 
 }
