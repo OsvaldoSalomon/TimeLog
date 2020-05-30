@@ -55,4 +55,35 @@ public class ProjectController {
         return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
     }
 
+    @PostMapping(PROJECTS_PATH)
+    public @ResponseBody ResponseEntity<Project> addProject(@RequestBody Project project) {
+        projectRepository.save(project);
+        return new ResponseEntity(project, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping(PROJECTS_PATH + "/{id}")
+    public void deleteProject(@PathVariable("id") String id) {
+
+        Optional<Project> optionalResponse = projectRepository.findById(id);
+        if (!optionalResponse.isPresent()) {
+
+            throw new ProjectNotFoundException(id);
+        }
+        projectRepository.deleteById(id);
+    }
+
+    @PutMapping(PROJECTS_PATH + "/{id}")
+    public ResponseEntity<Project> updateProjectById(@RequestBody Project project, @PathVariable("id") String id) {
+
+        Optional<Project> optionalResponse = projectRepository.findById(id);
+        if (!optionalResponse.isPresent()) {
+
+            throw new ProjectNotFoundException(id);
+        }
+        projectRepository.save(project);
+        return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
+
 }

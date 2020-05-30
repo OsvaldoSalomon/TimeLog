@@ -7,6 +7,7 @@ import com.timelog.timelog.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,13 +63,20 @@ public class CompanyController {
 
 
     @PostMapping(COMPANIES_PATH)
-    public @ResponseBody ResponseEntity<Company> addCompany(@RequestBody Company company) {
-        companyService.saveCompany(company);
+    public @ResponseBody ResponseEntity<Company> addCompany(@Validated @RequestBody Company company) {
+        companyRepository.save(company);
         return new ResponseEntity(company, HttpStatus.OK);
     }
 
+
     @DeleteMapping(COMPANIES_PATH + "/{id}")
-    public void deleteCompany(@PathVariable String id) {
+    public void deleteCompany(@PathVariable("id") String id) {
+
+        Optional<Company> optionalResponse = companyRepository.findById(id);
+        if (!optionalResponse.isPresent()) {
+
+            throw new CompanyNotFoundException(id);
+        }
         companyRepository.deleteById(id);
     }
 
@@ -80,7 +88,7 @@ public class CompanyController {
 
             throw new CompanyNotFoundException(id);
         }
-        companyService.saveCompany(company);
+        companyRepository.save(company);
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 

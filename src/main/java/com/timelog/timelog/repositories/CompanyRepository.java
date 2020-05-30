@@ -13,6 +13,4 @@ public interface CompanyRepository extends MongoRepository<Company, String> {
     @Query("{'_id': {'$in':?0}}")
     Optional<List<Company>> findByIdList(Set<String> companyList);
 
-
-
 }
