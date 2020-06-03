@@ -1,0 +1,16 @@
+
+//------Companies
+
+db.companies.insertMany([{_id:'C001', name: 'Company1', projectList:['P001', 'P002'], userList:['U001', 'U002']},{_id:'C002', name: 'Company2', projectList:['P003', 'P004', 'P005'], userList:['U002', 'U003', 'U004']},{_id:'C003', name: 'Company3', projectList:['P006', 'P007', 'P008', 'P009'], userList:['U003', 'U004', 'U005', 'U006']}])
+
+//------Projects
+
+db.projects.insertMany([{_id:'P001', name: 'Project1', company:'C001', userList:['U001', 'U002']},{_id:'P002', name: 'Project2', company:'C001', userList:['U001', 'U002']},{_id:'P003', name: 'Project3', company:'C002', userList:['U002', 'U003', 'U004']},{_id:'P004', name: 'Project4', company:'C002', userList:['U002', 'U003', 'U004']},{_id:'P005', name: 'Project5', company:'C002', userList:['U002', 'U003', 'U004']},{_id:'P006', name: 'Project6', company:'C003', userList:['U003', 'U004', 'U005', 'U006']},{_id:'P007', name: 'Project7', company:'C003', userList:['U003', 'U004', 'U005', 'U006']},{_id:'P008', name: 'Project8', company:'C003', userList:['U003', 'U004', 'U005', 'U006']},{_id:'P009', name: 'Project9', company:'C003', userList:['U003', 'U004', 'U005', 'U006']}])
+
+//------Users
+
+db.users.insertMany([{_id: 'U001', firstName: 'John', lastName: 'Doe', email: 'doej@mail.com', password:'doejohn'},{_id: 'U002', firstName: 'Miles', lastName: 'Halter', email: 'halterm@mail.com', password:'haltermiles'},{_id: 'U003', firstName: 'Alaska', lastName: 'Young', email: 'younga@mail.com', password:'youngalaska'},{_id: 'U004', firstName: 'Pino', lastName: 'Lella', email: 'lellap@mail.com', password:'lellapino'},{_id: 'U005', firstName: 'Elizabeth', lastName: 'Bennet', email: 'bennete@mail.com', password:'bennetelizabeth'},{_id: 'U006', firstName: 'Margo', lastName: 'Spiegelman', email: 'nessp@mail.com', password:'nesspatrick'}])
+
+
+
+
