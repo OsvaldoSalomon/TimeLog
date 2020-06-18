@@ -81,6 +81,7 @@ public class ProjectController {
 
             throw new ProjectNotFoundException(id);
         }
+        project.id = id;
         projectRepository.save(project);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }

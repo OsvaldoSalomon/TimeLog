@@ -3,7 +3,6 @@ package com.timelog.timelog.controller;
 import com.timelog.timelog.exceptions.CompanyNotFoundException;
 import com.timelog.timelog.models.Company;
 import com.timelog.timelog.repositories.CompanyRepository;
-import com.timelog.timelog.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +23,13 @@ public class CompanyController {
     private CompanyRepository companyRepository;
 
     @Autowired
-    private CompanyService companyService;
-
-    @Autowired
     public CompanyController(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
 
     @GetMapping(COMPANIES_PATH)
-    public ResponseEntity<List<Company>> getCompanyList(@RequestParam(required = false)
-                                        Set<String> companyList) {
+    public ResponseEntity<List<Company>> getCompanyList(
+            @RequestParam(required = false) Set<String> companyList) {
 
         if (companyList == null || companyList.isEmpty()) {
 
@@ -61,11 +57,10 @@ public class CompanyController {
         return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
     }
 
-
     @PostMapping(COMPANIES_PATH)
     public @ResponseBody ResponseEntity<Company> addCompany(@Validated @RequestBody Company company) {
         companyRepository.save(company);
-        return new ResponseEntity(company, HttpStatus.OK);
+        return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
 
@@ -81,17 +76,16 @@ public class CompanyController {
     }
 
     @PutMapping(COMPANIES_PATH + "/{id}")
-    public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable("id") String id) {
+    public ResponseEntity<Company> updateCompanyById(@Validated @RequestBody Company company, @PathVariable("id") String id) {
 
         Optional<Company> optionalResponse = companyRepository.findById(id);
         if (!optionalResponse.isPresent()) {
 
             throw new CompanyNotFoundException(id);
         }
+        company.id = id;
         companyRepository.save(company);
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
-
-
 
 }
