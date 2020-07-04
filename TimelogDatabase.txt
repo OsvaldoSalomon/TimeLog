@@ -9,7 +9,7 @@ db.projects.insertMany([{_id:'P001', name: 'Project1', company:'C001', userList:
 
 //------Users
 
-db.users.insertMany([{_id: 'U001', firstName: 'John', lastName: 'Doe', email: 'doej@mail.com', password:'doejohn'},{_id: 'U002', firstName: 'Miles', lastName: 'Halter', email: 'halterm@mail.com', password:'haltermiles'},{_id: 'U003', firstName: 'Alaska', lastName: 'Young', email: 'younga@mail.com', password:'youngalaska'},{_id: 'U004', firstName: 'Pino', lastName: 'Lella', email: 'lellap@mail.com', password:'lellapino'},{_id: 'U005', firstName: 'Elizabeth', lastName: 'Bennet', email: 'bennete@mail.com', password:'bennetelizabeth'},{_id: 'U006', firstName: 'Margo', lastName: 'Spiegelman', email: 'nessp@mail.com', password:'nesspatrick'}])
+db.users.insertMany([{_id: 'U001', firstName: 'John', lastName: 'Doe', email: 'doej@mail.com', password:'doejohn'},{_id: 'U002', firstName: 'Miles', lastName: 'Halter', email: 'halterm@mail.com', password:'haltermiles'},{_id: 'U003', firstName: 'Alaska', lastName: 'Young', email: 'younga@mail.com', password:'youngalaska'},{_id: 'U004', firstName: 'Pino', lastName: 'Lella', email: 'lellap@mail.com', password:'lellapino'},{_id: 'U005', firstName: 'Elizabeth', lastName: 'Bennet', email: 'bennete@mail.com', password:'bennetelizabeth'},{_id: 'U006', firstName: 'Margo', lastName: 'Spiegelman', email: 'spiegelmanm@mail.com', password:'spiegelmanmargo'}])
 
 
 
