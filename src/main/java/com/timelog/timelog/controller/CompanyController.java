@@ -16,6 +16,8 @@ import java.util.Set;
 import static com.timelog.timelog.constants.TimeLogConstants.COMPANIES_PATH;
 import static com.timelog.timelog.constants.TimeLogConstants.TIME_LOG_V1_PATH;
 
+
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(TIME_LOG_V1_PATH)
 public class CompanyController {

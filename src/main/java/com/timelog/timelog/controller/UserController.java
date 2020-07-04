@@ -1,7 +1,6 @@
 package com.timelog.timelog.controller;
 
 import com.timelog.timelog.exceptions.UserNotFoundException;
-import com.timelog.timelog.exceptions.UserNotFoundException;
 import com.timelog.timelog.models.User;
 import com.timelog.timelog.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import java.util.Set;
 
 import static com.timelog.timelog.constants.TimeLogConstants.*;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(TIME_LOG_V1_PATH)
 public class UserController {
