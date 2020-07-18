@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.timelog.timelog.constants.TimeLogConstants.COMPANIES_PATH;
-import static com.timelog.timelog.constants.TimeLogConstants.TIME_LOG_V1_PATH;
-
+import static com.timelog.timelog.constants.TimeLogConstants.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -84,12 +82,6 @@ public class CompanyController {
         return companyList;
     }
 
-
-//    @GetMapping(COMPANIES_PATH)
-//    Page<Company> companiesPageable(Pageable pageable) {
-//        return companyRepository.findAll(pageable);
-//    }
-
     @GetMapping(COMPANIES_PATH + "/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable("id") String id)
     {
@@ -100,7 +92,6 @@ public class CompanyController {
         }
         return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
     }
-
 
     @PostMapping(COMPANIES_PATH)
     public @ResponseBody ResponseEntity<Company> addCompany(@Validated @RequestBody Company company) {
