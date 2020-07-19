@@ -1,9 +1,17 @@
 package com.timelog.timelog.controller;
 
+import com.google.common.collect.Lists;
+import com.timelog.timelog.exceptions.CompanyNotFoundException;
+import com.timelog.timelog.exceptions.CompanyPageParameterException;
 import com.timelog.timelog.exceptions.UserNotFoundException;
+import com.timelog.timelog.exceptions.UserPageParameterException;
+import com.timelog.timelog.models.Company;
 import com.timelog.timelog.models.User;
 import com.timelog.timelog.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,22 +36,53 @@ public class UserController {
     }
 
     @GetMapping(USERS_PATH)
-    public ResponseEntity<List<User>> getUserList(@RequestParam(required = false)
-                                                                Set<String> userList) {
+    public ResponseEntity<List<User>> getUserList(
+            @RequestParam(value = "userList", required = false) Set<String> requestedUserList,
+            @RequestParam(name = "page", required = false/*, defaultValue = "0"*/) Integer page,
+            @RequestParam(name = "size", required = false/*, defaultValue = "2"*/) Integer size) {
 
-        if (userList == null || userList.isEmpty()) {
+        List<User> userList;
 
-            return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+        if (requestedUserList == null || requestedUserList.isEmpty()) {
 
+            userList = getPagedUserList(page, size);
         } else {
 
-            Optional<List<User>> optionalList = userRepository.findByIdList(userList);
-            if (!optionalList.isPresent()) {
-
-                throw new UserNotFoundException("");
-            }
-            return new ResponseEntity<>(optionalList.get(), HttpStatus.OK);
+            userList = getFilteredUserList(requestedUserList);
         }
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
+    private List<User> getFilteredUserList(Set<String> requestedUserList) {
+
+        List<User>userList;
+        Optional<List<User>> optionalList = userRepository.findByIdList(requestedUserList);
+        if (!optionalList.isPresent()) {
+
+            throw new UserNotFoundException("");
+        }
+        userList = optionalList.get();
+        return userList;
+    }
+
+    private List<User> getPagedUserList(Integer page, Integer size) {
+
+        if (page == null ^ size == null) {
+            throw new UserPageParameterException();
+        }
+
+        List<User> userList;
+        if (page == null /*&& size == null*/)  {
+
+            userList = userRepository.findAll();
+        } else {
+
+            Pageable pageable = PageRequest.of(page, size);
+            Page<User> requestedPage = userRepository.findAll(pageable);
+            userList = Lists.newArrayList(requestedPage);
+        }
+        return userList;
     }
 
     @GetMapping(USERS_PATH + "/{id}")
@@ -87,7 +126,5 @@ public class UserController {
         userRepository.save(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
-
 
 }
