@@ -1,22 +1,19 @@
 package com.timelog.timelog.controller;
 
-import com.google.common.collect.Lists;
 import com.timelog.timelog.exceptions.CompanyNotFoundException;
-import com.timelog.timelog.exceptions.CompanyPageParameterException;
 import com.timelog.timelog.models.Company;
 import com.timelog.timelog.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.timelog.timelog.constants.TimeLogConstants.*;
 
@@ -32,54 +29,63 @@ public class CompanyController {
         this.companyRepository = companyRepository;
     }
 
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc")) {
+            return Sort.Direction.ASC;
+        } else if (direction.equals("desc")) {
+            return Sort.Direction.DESC;
+        }
+
+        return Sort.Direction.ASC;
+    }
+
     @GetMapping(COMPANIES_PATH)
-    public ResponseEntity<List<Company>> getPagedCompanyList(
-            @RequestParam(value = "companyList", required = false) Set<String> requestedCompanyList,
-            @RequestParam(name = "page", required = false/*, defaultValue = "0"*/) Integer page,
-            @RequestParam(name = "size", required = false/*, defaultValue = "2"*/) Integer size) {
+    public ResponseEntity<Map<String, Object>> getAllTutorialsPage(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
 
-        List<Company> companyList;
+        try {
+            List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
-        if (requestedCompanyList == null || requestedCompanyList.isEmpty()) {
+            if (sort[0].contains(",")) {
+                // will sort more than 2 fields
+                // sortOrder="field, direction"
+                for (String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                // sort=[field, direction]
+                orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+            }
 
-            companyList = getPagedCompanyList(page, size);
-        } else {
+            List<Company> companies = new ArrayList<Company>();
+            Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
-            companyList = getFilteredCompanyList(requestedCompanyList);
+            Page<Company> pageTuts;
+            if (name == null)
+                pageTuts = companyRepository.findAll(pagingSort);
+            else
+                pageTuts = companyRepository.findByNameContaining(name, pagingSort);
+
+            companies = pageTuts.getContent();
+
+            if (companies.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("companies", companies);
+            response.put("currentPage", pageTuts.getNumber());
+            response.put("totalCompanies", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(companyList, HttpStatus.OK);
-    }
-
-    private List<Company> getFilteredCompanyList(Set<String> requestedCompanyList) {
-
-        List<Company> companyList;
-        Optional<List<Company>> optionalList = companyRepository.findByIdList(requestedCompanyList);
-        if (!optionalList.isPresent()) {
-
-            throw new CompanyNotFoundException("");
-        }
-        companyList = optionalList.get();
-        return companyList;
-    }
-
-    private List<Company> getPagedCompanyList(Integer page, Integer size) {
-
-        if (page == null ^ size == null) {
-            throw new CompanyPageParameterException();
-        }
-
-        List<Company> companyList;
-        if (page == null /*&& size == null*/)  {
-
-            companyList = companyRepository.findAll();
-        } else {
-
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Company> requestedPage = companyRepository.findAll(pageable);
-            companyList = Lists.newArrayList(requestedPage);
-        }
-        return companyList;
     }
 
     @GetMapping(COMPANIES_PATH + "/{id}")

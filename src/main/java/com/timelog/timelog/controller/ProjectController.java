@@ -40,7 +40,7 @@ public class ProjectController {
 
         return Sort.Direction.ASC;
     }
-//
+
 //    @GetMapping(PROJECTS_PATH)
 //    public ResponseEntity<List<Project>> getProjectList(
 //            @RequestParam(value = "projectList", required = false) Set<String> requestedProjectList,
@@ -108,37 +108,6 @@ public class ProjectController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
-//    private List<Project> getFilteredProjectList(Set<String> requestedProjectList) {
-//
-//        List<Project> projectList;
-//        Optional<List<Project>> optionalList = projectRepository.findByIdList(requestedProjectList);
-//        if (!optionalList.isPresent()) {
-//
-//            throw new ProjectNotFoundException("");
-//        }
-//        projectList = optionalList.get();
-//        return projectList;
-//    }
-//
-//    private List<Project> getPagedProjectList(Integer page, Integer size) {
-//
-//        if (page == null ^ size == null) {
-//            throw new ProjectPageParameterException();
-//        }
-//
-//        List<Project> projectList;
-//        if (page == null /*&& size == null*/)  {
-//
-//            projectList = projectRepository.findAll();
-//        } else {
-//
-//            Pageable pageable = PageRequest.of(page, size);
-//            Page<Project> requestedPage = projectRepository.findAll(pageable);
-//            projectList = Lists.newArrayList(requestedPage);
-//        }
-//        return projectList;
-//    }
 
     @GetMapping(PROJECTS_PATH + "/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable("id") String id) {

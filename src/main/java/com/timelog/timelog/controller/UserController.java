@@ -1,25 +1,19 @@
 package com.timelog.timelog.controller;
 
-import com.google.common.collect.Lists;
-import com.timelog.timelog.exceptions.CompanyNotFoundException;
-import com.timelog.timelog.exceptions.CompanyPageParameterException;
 import com.timelog.timelog.exceptions.UserNotFoundException;
-import com.timelog.timelog.exceptions.UserPageParameterException;
-import com.timelog.timelog.models.Company;
 import com.timelog.timelog.models.User;
 import com.timelog.timelog.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.timelog.timelog.constants.TimeLogConstants.*;
 
@@ -35,54 +29,63 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc")) {
+            return Sort.Direction.ASC;
+        } else if (direction.equals("desc")) {
+            return Sort.Direction.DESC;
+        }
+
+        return Sort.Direction.ASC;
+    }
+
     @GetMapping(USERS_PATH)
-    public ResponseEntity<List<User>> getUserList(
-            @RequestParam(value = "userList", required = false) Set<String> requestedUserList,
-            @RequestParam(name = "page", required = false/*, defaultValue = "0"*/) Integer page,
-            @RequestParam(name = "size", required = false/*, defaultValue = "2"*/) Integer size) {
+    public ResponseEntity<Map<String, Object>> getAllTutorialsPage(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
 
-        List<User> userList;
+        try {
+            List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
-        if (requestedUserList == null || requestedUserList.isEmpty()) {
+            if (sort[0].contains(",")) {
+                // will sort more than 2 fields
+                // sortOrder="field, direction"
+                for (String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                // sort=[field, direction]
+                orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+            }
 
-            userList = getPagedUserList(page, size);
-        } else {
+            List<User> users = new ArrayList<User>();
+            Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
-            userList = getFilteredUserList(requestedUserList);
+            Page<User> pageTuts;
+            if (name == null)
+                pageTuts = userRepository.findAll(pagingSort);
+            else
+                pageTuts = userRepository.findByNameContaining(name, pagingSort);
+
+            users = pageTuts.getContent();
+
+            if (users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("users", users);
+            response.put("currentPage", pageTuts.getNumber());
+            response.put("totalUsers", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
-    private List<User> getFilteredUserList(Set<String> requestedUserList) {
-
-        List<User>userList;
-        Optional<List<User>> optionalList = userRepository.findByIdList(requestedUserList);
-        if (!optionalList.isPresent()) {
-
-            throw new UserNotFoundException("");
-        }
-        userList = optionalList.get();
-        return userList;
-    }
-
-    private List<User> getPagedUserList(Integer page, Integer size) {
-
-        if (page == null ^ size == null) {
-            throw new UserPageParameterException();
-        }
-
-        List<User> userList;
-        if (page == null /*&& size == null*/)  {
-
-            userList = userRepository.findAll();
-        } else {
-
-            Pageable pageable = PageRequest.of(page, size);
-            Page<User> requestedPage = userRepository.findAll(pageable);
-            userList = Lists.newArrayList(requestedPage);
-        }
-        return userList;
     }
 
     @GetMapping(USERS_PATH + "/{id}")
