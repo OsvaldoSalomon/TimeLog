@@ -16,5 +16,5 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query("{'_id': {'$in':?0}}")
     Optional<List<User>> findByIdList(Set<String> userList);
 
-    Page<User> findByNameContaining(String name, Pageable pageable);
+    Page<User> findByFirstNameContaining(String name, Pageable pageable);
 }

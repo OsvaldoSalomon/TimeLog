@@ -1,6 +1,5 @@
 package com.timelog.timelog.repositories;
 
-
 import com.timelog.timelog.models.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

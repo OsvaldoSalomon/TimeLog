@@ -68,7 +68,7 @@ public class UserController {
             if (name == null)
                 pageTuts = userRepository.findAll(pagingSort);
             else
-                pageTuts = userRepository.findByNameContaining(name, pagingSort);
+                pageTuts = userRepository.findByFirstNameContaining(name, pagingSort);
 
             users = pageTuts.getContent();
 
@@ -100,11 +100,11 @@ public class UserController {
     }
 
     @PostMapping(USERS_PATH)
-    public @ResponseBody ResponseEntity<User> addUser(@Validated @RequestBody User user) {
+    public @ResponseBody
+    ResponseEntity<User> addUser(@Validated @RequestBody User user) {
         userRepository.save(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
 
     @DeleteMapping(USERS_PATH + "/{id}")
     public void deleteUser(@PathVariable("id") String id) {

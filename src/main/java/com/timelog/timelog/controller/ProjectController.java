@@ -1,8 +1,6 @@
 package com.timelog.timelog.controller;
 
-import com.google.common.collect.Lists;
 import com.timelog.timelog.exceptions.ProjectNotFoundException;
-import com.timelog.timelog.exceptions.ProjectPageParameterException;
 import com.timelog.timelog.models.Project;
 import com.timelog.timelog.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,25 +38,6 @@ public class ProjectController {
 
         return Sort.Direction.ASC;
     }
-
-//    @GetMapping(PROJECTS_PATH)
-//    public ResponseEntity<List<Project>> getProjectList(
-//            @RequestParam(value = "projectList", required = false) Set<String> requestedProjectList,
-//            @RequestParam(name = "page", required = false/*, defaultValue = "0"*/) Integer page,
-//            @RequestParam(name = "size", required = false/*, defaultValue = "2"*/) Integer size) {
-//
-//        List<Project> projectList;
-//
-//        if (requestedProjectList == null || requestedProjectList.isEmpty()) {
-//
-//            projectList = getPagedProjectList(page, size);
-//        } else {
-//
-//            projectList = getFilteredProjectList(requestedProjectList);
-//        }
-//
-//        return new ResponseEntity<>(projectList, HttpStatus.OK);
-//    }
 
     @GetMapping(PROJECTS_PATH)
     public ResponseEntity<Map<String, Object>> getAllTutorialsPage(
@@ -121,7 +100,8 @@ public class ProjectController {
     }
 
     @PostMapping(PROJECTS_PATH)
-    public @ResponseBody ResponseEntity<Project> addProject(@Validated @RequestBody Project project) {
+    public @ResponseBody
+    ResponseEntity<Project> addProject(@Validated @RequestBody Project project) {
         projectRepository.save(project);
         return new ResponseEntity(project, HttpStatus.OK);
     }
