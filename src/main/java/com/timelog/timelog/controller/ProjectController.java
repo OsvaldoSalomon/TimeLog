@@ -40,11 +40,11 @@ public class ProjectController {
     }
 
     @GetMapping(PROJECTS_PATH)
-    public ResponseEntity<Map<String, Object>> getAllTutorialsPage(
+    public ResponseEntity<Map<String, Object>> getAllProjects(
             @RequestParam(required = false) String name,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
+            @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
+            @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
+            @RequestParam(required = false, defaultValue = "id,asc") String[] sort) {
 
         try {
             List<Sort.Order> orders = new ArrayList<Sort.Order>();
@@ -61,7 +61,15 @@ public class ProjectController {
                 orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
             }
 
-            List<Project> projects = new ArrayList<Project>();
+            Map<String, Object> responseAll = new HashMap<>();
+
+            List<Project> projects;
+            if (page == null) {
+                projects = projectRepository.findAll();
+                responseAll.put("projects", projects);
+                return new ResponseEntity<>(responseAll, HttpStatus.OK);
+            }
+
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
             Page<Project> pageTuts;
