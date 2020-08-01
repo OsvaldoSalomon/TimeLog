@@ -17,4 +17,9 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<List<User>> findByIdList(Set<String> userList);
 
     Page<User> findByFirstNameContaining(String name, Pageable pageable);
+
+    Page<User> findByFirstNameContainingAndLastNameContainingAndEmailContaining(String firstName, String lastName, String email, Pageable pageable);
+
+    Page<User> findByEmailContaining(String name, Pageable pageable);
+
 }

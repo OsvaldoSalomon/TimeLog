@@ -41,7 +41,9 @@ public class UserController {
 
     @GetMapping(USERS_PATH)
     public ResponseEntity<Map<String, Object>> getAllUsers(
-            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String email,
             @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
             @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
             @RequestParam(required = false, defaultValue = "id,asc") String[] sort) {
@@ -74,10 +76,10 @@ public class UserController {
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
             Page<User> pageTuts;
-            if (name == null)
+            if (firstName == null)
                 pageTuts = userRepository.findAll(pagingSort);
             else
-                pageTuts = userRepository.findByFirstNameContaining(name, pagingSort);
+                pageTuts = userRepository.findByFirstNameContaining(firstName, pagingSort);
 
             users = pageTuts.getContent();
 
