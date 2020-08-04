@@ -79,7 +79,7 @@ public class UserController {
             if (firstName == null)
                 pageTuts = userRepository.findAll(pagingSort);
             else
-                pageTuts = userRepository.findByFirstNameContaining(firstName, pagingSort);
+                pageTuts = userRepository.findByFirstName(firstName, pagingSort);
 
             users = pageTuts.getContent();
 
@@ -109,6 +109,7 @@ public class UserController {
         }
         return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
     }
+    
 
     @PostMapping(USERS_PATH)
     public @ResponseBody

@@ -12,14 +12,15 @@ import java.util.Set;
 
 public interface UserRepository extends MongoRepository<User, String> {
 
-
     @Query("{'_id': {'$in':?0}}")
     Optional<List<User>> findByIdList(Set<String> userList);
 
-    Page<User> findByFirstNameContaining(String name, Pageable pageable);
+    Page<User> findByFirstNameAndLastNameAndEmail(String firstName, String lastName, String email, Pageable pageable);
 
-    Page<User> findByFirstNameContainingAndLastNameContainingAndEmailContaining(String firstName, String lastName, String email, Pageable pageable);
+    Page<User> findByFirstName(String firstName, Pageable pageable);
 
-    Page<User> findByEmailContaining(String name, Pageable pageable);
+    Optional<User> findByLastName(String lastName);
+
+    Page<User> findByEmail(String email, Pageable pageable);
 
 }
