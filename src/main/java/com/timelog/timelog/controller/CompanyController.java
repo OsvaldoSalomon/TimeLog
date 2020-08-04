@@ -40,12 +40,7 @@ public class CompanyController {
     }
 
     @GetMapping(COMPANIES_PATH)
-    public ResponseEntity<Map<String, Object>> getAllCompanies(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
-            @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
-            @RequestParam(required = false, defaultValue = "id,asc") String[] sort) {
-
+    public ResponseEntity<List<Company>> getAllCompanies(@RequestParam(defaultValue = "id,asc") String[] sort) {
 
         try {
             List<Sort.Order> orders = new ArrayList<Sort.Order>();
@@ -62,15 +57,41 @@ public class CompanyController {
                 orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
             }
 
-            Map<String, Object> responseAll = new HashMap<>();
+            List<Company> companies = companyRepository.findAll(Sort.by(orders));
 
-            List<Company> companies;
-            if (page == null) {
-                companies = companyRepository.findAll();
-                responseAll.put("companies",companies);
-                return new ResponseEntity<>(responseAll, HttpStatus.OK);
+            if (companies.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
+            return new ResponseEntity<>(companies, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(COMPANIES_PAGE_PATH)
+    public ResponseEntity<Map<String, Object>> getAllCompaniesPage(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
+            @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
+            @RequestParam(required = false, defaultValue = "id,asc") String[] sort) {
+
+        try {
+            List<Sort.Order> orders = new ArrayList<Sort.Order>();
+
+            if (sort[0].contains(",")) {
+                // will sort more than 2 fields
+                // sortOrder="field, direction"
+                for (String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                // sort=[field, direction]
+                orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+            }
+
+            List<Company> companies = new ArrayList<Company>();
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
             Page<Company> pageTuts;

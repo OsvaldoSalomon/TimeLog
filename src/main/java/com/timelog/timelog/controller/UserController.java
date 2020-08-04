@@ -40,7 +40,38 @@ public class UserController {
     }
 
     @GetMapping(USERS_PATH)
-    public ResponseEntity<Map<String, Object>> getAllUsers(
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam(defaultValue = "id,asc") String[] sort) {
+
+        try {
+            List<Sort.Order> orders = new ArrayList<Sort.Order>();
+
+            if (sort[0].contains(",")) {
+                // will sort more than 2 fields
+                // sortOrder="field, direction"
+                for (String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                // sort=[field, direction]
+                orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+            }
+
+            List<User> users = userRepository.findAll(Sort.by(orders));
+
+            if (users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping(USERS_PAGE_PATH)
+    public ResponseEntity<Map<String, Object>> getAllUsersPage(
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
             @RequestParam(required = false) String email,
@@ -64,15 +95,7 @@ public class UserController {
                 orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
             }
 
-            Map<String, Object> responseAll = new HashMap<>();
-
-            List<User> users;
-            if (page == null) {
-                users = userRepository.findAll();
-                responseAll.put("users", users);
-                return new ResponseEntity<>(responseAll, HttpStatus.OK);
-            }
-
+            List<User> users = new ArrayList<User>();
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
             Page<User> pageTuts;

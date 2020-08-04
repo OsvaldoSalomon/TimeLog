@@ -1,6 +1,7 @@
 package com.timelog.timelog.controller;
 
 import com.timelog.timelog.exceptions.ProjectNotFoundException;
+import com.timelog.timelog.models.Company;
 import com.timelog.timelog.models.Project;
 import com.timelog.timelog.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,38 @@ public class ProjectController {
     }
 
     @GetMapping(PROJECTS_PATH)
-    public ResponseEntity<Map<String, Object>> getAllProjects(
+    public ResponseEntity<List<Project>> getAllProjects(@RequestParam(defaultValue = "id,asc") String[] sort) {
+
+        try {
+            List<Sort.Order> orders = new ArrayList<Sort.Order>();
+
+            if (sort[0].contains(",")) {
+                // will sort more than 2 fields
+                // sortOrder="field, direction"
+                for (String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                // sort=[field, direction]
+                orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+            }
+
+            List<Project> projects = projectRepository.findAll(Sort.by(orders));
+
+            if (projects.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(projects, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping(PROJECTS_PAGE_PATH)
+    public ResponseEntity<Map<String, Object>> getAllProjectsPage(
             @RequestParam(required = false) String name,
             @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
             @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
@@ -61,15 +93,7 @@ public class ProjectController {
                 orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
             }
 
-            Map<String, Object> responseAll = new HashMap<>();
-
-            List<Project> projects;
-            if (page == null) {
-                projects = projectRepository.findAll();
-                responseAll.put("projects", projects);
-                return new ResponseEntity<>(responseAll, HttpStatus.OK);
-            }
-
+            List<Project> projects = new ArrayList<Project>();
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
             Page<Project> pageTuts;
