@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.*;
 
 import static com.timelog.timelog.constants.TimeLogConstants.*;
@@ -41,18 +39,6 @@ public class UserController {
         return Sort.Direction.ASC;
     }
 
-    @RequestMapping("/login")
-    public boolean login(@RequestBody User user) {
-        return user.getFirstName().equals("user") && user.getPassword().equals("password");
-    }
-
-    @RequestMapping("/user")
-    public Principal user(HttpServletRequest request) {
-        String authToken = request.getHeader("Authorization")
-                .substring("Basic".length()).trim();
-        return () ->  new String(Base64.getDecoder()
-                .decode(authToken)).split(":")[0];
-    }
 
     @GetMapping(USERS_PATH)
     public ResponseEntity<List<User>> getAllUsers(@RequestParam(defaultValue = "id,asc") String[] sort) {

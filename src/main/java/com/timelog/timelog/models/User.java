@@ -15,11 +15,4 @@ public class User {
     public String email;
     public String password;
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }
