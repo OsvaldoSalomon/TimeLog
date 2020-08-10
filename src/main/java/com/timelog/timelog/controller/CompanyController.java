@@ -94,13 +94,13 @@ public class CompanyController {
             List<Company> companies = new ArrayList<Company>();
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
-            Page<Company> pageTuts;
+            Page<Company> pageCompanies;
             if (name == null)
-                pageTuts = companyRepository.findAll(pagingSort);
+                pageCompanies = companyRepository.findAll(pagingSort);
             else
-                pageTuts = companyRepository.findByNameContaining(name, pagingSort);
+                pageCompanies = companyRepository.findByNameContaining(name, pagingSort);
 
-            companies = pageTuts.getContent();
+            companies = pageCompanies.getContent();
 
             if (companies.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -109,9 +109,9 @@ public class CompanyController {
             Map<String, Object> response = new HashMap<>();
 
             response.put("companies", companies);
-            response.put("currentPage", pageTuts.getNumber());
-            response.put("totalCompanies", pageTuts.getTotalElements());
-            response.put("totalPages", pageTuts.getTotalPages());
+            response.put("currentPage", pageCompanies.getNumber());
+            response.put("totalCompanies", pageCompanies.getTotalElements());
+            response.put("totalPages", pageCompanies.getTotalPages());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

@@ -96,13 +96,13 @@ public class ProjectController {
             List<Project> projects = new ArrayList<Project>();
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
-            Page<Project> pageTuts;
+            Page<Project> pageProjects;
             if (name == null)
-                pageTuts = projectRepository.findAll(pagingSort);
+                pageProjects = projectRepository.findAll(pagingSort);
             else
-                pageTuts = projectRepository.findByNameContaining(name, pagingSort);
+                pageProjects = projectRepository.findByNameContaining(name, pagingSort);
 
-            projects = pageTuts.getContent();
+            projects = pageProjects.getContent();
 
             if (projects.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -110,9 +110,9 @@ public class ProjectController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("projects", projects);
-            response.put("currentPage", pageTuts.getNumber());
-            response.put("totalProjects", pageTuts.getTotalElements());
-            response.put("totalPages", pageTuts.getTotalPages());
+            response.put("currentPage", pageProjects.getNumber());
+            response.put("totalProjects", pageProjects.getTotalElements());
+            response.put("totalPages", pageProjects.getTotalPages());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

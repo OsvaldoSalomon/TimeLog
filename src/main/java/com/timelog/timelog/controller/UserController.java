@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.*;
 
 import static com.timelog.timelog.constants.TimeLogConstants.*;
@@ -41,21 +39,10 @@ public class UserController {
         return Sort.Direction.ASC;
     }
 
-    @RequestMapping("/login")
-    public boolean login(@RequestBody User user) {
-        return user.getFirstName().equals("user") && user.getPassword().equals("password");
-    }
-
-    @RequestMapping("/user")
-    public Principal user(HttpServletRequest request) {
-        String authToken = request.getHeader("Authorization")
-                .substring("Basic".length()).trim();
-        return () ->  new String(Base64.getDecoder()
-                .decode(authToken)).split(":")[0];
-    }
-
     @GetMapping(USERS_PATH)
-    public ResponseEntity<List<User>> getAllUsers(@RequestParam(defaultValue = "id,asc") String[] sort) {
+    public ResponseEntity<List<User>> getAllUsers(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
 
         try {
             List<Sort.Order> orders = new ArrayList<Sort.Order>();
@@ -88,8 +75,6 @@ public class UserController {
     @GetMapping(USERS_PAGE_PATH)
     public ResponseEntity<Map<String, Object>> getAllUsersPage(
             @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String email,
             @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
             @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
             @RequestParam(required = false, defaultValue = "id,asc") String[] sort) {
@@ -113,13 +98,13 @@ public class UserController {
             List<User> users = new ArrayList<User>();
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
-            Page<User> pageTuts;
+            Page<User> pageUsers;
             if (firstName == null)
-                pageTuts = userRepository.findAll(pagingSort);
+                pageUsers = userRepository.findAll(pagingSort);
             else
-                pageTuts = userRepository.findByFirstName(firstName, pagingSort);
+                pageUsers = userRepository.findByFirstName(firstName, pagingSort);
 
-            users = pageTuts.getContent();
+            users = pageUsers.getContent();
 
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -127,9 +112,9 @@ public class UserController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("users", users);
-            response.put("currentPage", pageTuts.getNumber());
-            response.put("totalUsers", pageTuts.getTotalElements());
-            response.put("totalPages", pageTuts.getTotalPages());
+            response.put("currentPage", pageUsers.getNumber());
+            response.put("totalUsers", pageUsers.getTotalElements());
+            response.put("totalPages", pageUsers.getTotalPages());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
