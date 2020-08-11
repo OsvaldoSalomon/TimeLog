@@ -14,6 +14,7 @@ public class Company {
 
     @Id
     public String id;
+
     @NotBlank(message = "Please provide the company name.")
     public String name;
     public List<String> projectList = new ArrayList<>();
