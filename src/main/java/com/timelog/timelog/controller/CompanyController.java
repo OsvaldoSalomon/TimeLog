@@ -1,6 +1,8 @@
 package com.timelog.timelog.controller;
 
+import com.google.common.collect.Lists;
 import com.timelog.timelog.exceptions.CompanyNotFoundException;
+import com.timelog.timelog.exceptions.CompanyPageParameterException;
 import com.timelog.timelog.models.Company;
 import com.timelog.timelog.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,24 +168,27 @@ public class CompanyController {
 
 //package com.timelog.timelog.controller;
 //
-//import com.google.common.collect.Lists;
-//import com.timelog.timelog.exceptions.CompanyNotFoundException;
-//import com.timelog.timelog.exceptions.CompanyPageParameterException;
-//import com.timelog.timelog.models.Company;
-//import com.timelog.timelog.repositories.CompanyRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.data.domain.Sort;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.validation.annotation.Validated;
-//import org.springframework.web.bind.annotation.*;
+//        import com.google.common.collect.Lists;
+//        import com.timelog.timelog.exceptions.CompanyNotFoundException;
+//        import com.timelog.timelog.exceptions.CompanyPageParameterException;
+//        import com.timelog.timelog.models.Company;
+//        import com.timelog.timelog.repositories.CompanyRepository;
+//        import org.springframework.beans.factory.annotation.Autowired;
+//        import org.springframework.data.domain.Page;
+//        import org.springframework.data.domain.PageRequest;
+//        import org.springframework.data.domain.Pageable;
+//        import org.springframework.http.HttpStatus;
+//        import org.springframework.http.ResponseEntity;
+//        import org.springframework.validation.annotation.Validated;
+//        import org.springframework.web.bind.annotation.*;
 //
-//import java.util.*;
+//        import java.util.List;
+//        import java.util.Optional;
+//        import java.util.Set;
 //
-//import static com.timelog.timelog.constants.TimeLogConstants.*;
+//        import static com.timelog.timelog.constants.TimeLogConstants.COMPANIES_PATH;
+//        import static com.timelog.timelog.constants.TimeLogConstants.TIME_LOG_V1_PATH;
+//
 //
 //@CrossOrigin(origins = "http://localhost:4200")
 //@RestController
@@ -197,73 +202,23 @@ public class CompanyController {
 //        this.companyRepository = companyRepository;
 //    }
 //
-//    private Sort.Direction getSortDirection(String direction) {
-//        if (direction.equals("asc")) {
-//            return Sort.Direction.ASC;
-//        } else if (direction.equals("desc")) {
-//            return Sort.Direction.DESC;
-//        }
-//
-//        return Sort.Direction.ASC;
-//    }
-//
 //    @GetMapping(COMPANIES_PATH)
-//    public ResponseEntity<List<Company>> getAllCompanies(
-//            @RequestParam(required = false) String name,
+//    public ResponseEntity<List<Company>> getPagedCompanyList(
 //            @RequestParam(value = "companyList", required = false) Set<String> requestedCompanyList,
-//            @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
-//            @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
-//            @RequestParam(required = false, defaultValue = "id,asc") String[] sort) {
+//            @RequestParam(name = "page", required = false/*, defaultValue = "0"*/) Integer page,
+//            @RequestParam(name = "size", required = false/*, defaultValue = "2"*/) Integer size) {
 //
 //        List<Company> companyList;
 //
 //        if (requestedCompanyList == null || requestedCompanyList.isEmpty()) {
 //
-//            companyList = getPagedCompanyList(page, size, name, sort);
+//            companyList = getPagedCompanyList(page, size);
 //        } else {
 //
 //            companyList = getFilteredCompanyList(requestedCompanyList);
 //        }
 //
 //        return new ResponseEntity<>(companyList, HttpStatus.OK);
-//    }
-//
-//    private List<Company> getPagedCompanyList(Integer page, Integer size, String name, String[] sort) {
-//        List<Sort.Order> orders = new ArrayList<>();
-//
-//        if (sort[0].contains(",")) {
-//            for (String sortOrder : sort) {
-//                String[] _sort = sortOrder.split(",");
-//                orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
-//            }
-//        } else {
-//
-//            orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
-//        }
-//
-//        if (page == null ^ size == null) {
-//            throw new CompanyPageParameterException();
-//        }
-//
-//        List<Company> companyList;
-//        if (page == null /*&& size == null*/)  {
-//
-//            companyList = companyRepository.findAll();
-//        } else {
-//
-//            Pageable pageable = PageRequest.of(page, size, Sort.by(orders));
-//
-//            Page<Company> requestedPage = companyRepository.findAll(pageable);
-//            companyList = Lists.newArrayList(requestedPage);
-//
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("companies", companyList);
-//            response.put("currentPage", requestedPage.getNumber());
-//            response.put("totalCompanies", requestedPage.getTotalElements());
-//            response.put("totalPages", requestedPage.getTotalPages());
-//
-//        }
-//        return companyList;
 //    }
 //
 //    private List<Company> getFilteredCompanyList(Set<String> requestedCompanyList) {
@@ -278,8 +233,34 @@ public class CompanyController {
 //        return companyList;
 //    }
 //
+//    private List<Company> getPagedCompanyList(Integer page, Integer size) {
+//
+//        if (page == null ^ size == null) {
+//            throw new CompanyPageParameterException();
+//        }
+//
+//        List<Company> companyList;
+//        if (page == null /*&& size == null*/)  {
+//
+//            companyList = companyRepository.findAll();
+//        } else {
+//
+//            Pageable pageable = PageRequest.of(page, size);
+//            Page<Company> requestedPage = companyRepository.findAll(pageable);
+//            companyList = Lists.newArrayList(requestedPage);
+//        }
+//        return companyList;
+//    }
+//
+//
+////    @GetMapping(COMPANIES_PATH)
+////    Page<Company> companiesPageable(Pageable pageable) {
+////        return companyRepository.findAll(pageable);
+////    }
+//
 //    @GetMapping(COMPANIES_PATH + "/{id}")
-//    public ResponseEntity<Company> getCompanyById(@PathVariable("id") String id) {
+//    public ResponseEntity<Company> getCompanyById(@PathVariable("id") String id)
+//    {
 //        Optional<Company> optionalResponse = companyRepository.findById(id);
 //        if (!optionalResponse.isPresent()) {
 //
@@ -288,9 +269,9 @@ public class CompanyController {
 //        return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
 //    }
 //
+//
 //    @PostMapping(COMPANIES_PATH)
-//    public @ResponseBody
-//    ResponseEntity<Company> addCompany(@Validated @RequestBody Company company) {
+//    public @ResponseBody ResponseEntity<Company> addCompany(@Validated @RequestBody Company company) {
 //        companyRepository.save(company);
 //        return new ResponseEntity<>(company, HttpStatus.OK);
 //    }
