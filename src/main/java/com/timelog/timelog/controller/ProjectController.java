@@ -41,38 +41,7 @@ public class ProjectController {
     }
 
     @GetMapping(PROJECTS_PATH)
-    public ResponseEntity<List<Project>> getAllProjects(@RequestParam(defaultValue = "id,asc") String[] sort) {
-
-        try {
-            List<Sort.Order> orders = new ArrayList<Sort.Order>();
-
-            if (sort[0].contains(",")) {
-                // will sort more than 2 fields
-                // sortOrder="field, direction"
-                for (String sortOrder : sort) {
-                    String[] _sort = sortOrder.split(",");
-                    orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
-                }
-            } else {
-                // sort=[field, direction]
-                orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
-            }
-
-            List<Project> projects = projectRepository.findAll(Sort.by(orders));
-
-            if (projects.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(projects, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    @GetMapping(PROJECTS_PAGE_PATH)
-    public ResponseEntity<Map<String, Object>> getAllProjectsPage(
+    public ResponseEntity<Map<String, Object>> getProjects(
             @RequestParam(required = false) String name,
             @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
             @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
@@ -93,7 +62,15 @@ public class ProjectController {
                 orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
             }
 
-            List<Project> projects = new ArrayList<Project>();
+            Map<String, Object> responseAll = new HashMap<>();
+
+            List<Project> projects;
+            if (page == null) {
+                projects = projectRepository.findAll();
+                responseAll.put("projects", projects);
+                return new ResponseEntity<>(responseAll, HttpStatus.OK);
+            }
+
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
             Page<Project> pageProjects;
@@ -109,6 +86,7 @@ public class ProjectController {
             }
 
             Map<String, Object> response = new HashMap<>();
+
             response.put("projects", projects);
             response.put("currentPage", pageProjects.getNumber());
             response.put("totalProjects", pageProjects.getTotalElements());
