@@ -65,7 +65,7 @@ public class UserController {
 
             List<User> users;
             if (page == null) {
-                users = userRepository.findAll();
+                users = userRepository.findAll(Sort.by(orders));
                 responseAll.put("users", users);
                 return new ResponseEntity<>(responseAll, HttpStatus.OK);
             }

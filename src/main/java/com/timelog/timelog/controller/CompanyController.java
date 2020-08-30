@@ -68,7 +68,7 @@ public class CompanyController {
 
             List<Company> companies;
             if (page == null) {
-                companies = companyRepository.findAll();
+                companies = companyRepository.findAll(Sort.by(orders));
                 responseAll.put("companies",companies);
                 return new ResponseEntity<>(responseAll, HttpStatus.OK);
             }

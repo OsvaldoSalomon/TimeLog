@@ -66,7 +66,7 @@ public class ProjectController {
 
             List<Project> projects;
             if (page == null) {
-                projects = projectRepository.findAll();
+                projects = projectRepository.findAll(Sort.by(orders));
                 responseAll.put("projects", projects);
                 return new ResponseEntity<>(responseAll, HttpStatus.OK);
             }
