@@ -79,7 +79,7 @@ public class UserController {
             if (searchText == null)
                 pageUsers = userRepository.findAll(pagingSort);
             else
-                pageUsers = userRepository.findByFirstNameAndLastNameAndEmailAndId(searchText, pagingSort);
+                pageUsers = userRepository.findByFirstNameOrLastNameOrEmail(firstName, lastName, email, pagingSort);
 
             users = pageUsers.getContent();
 
