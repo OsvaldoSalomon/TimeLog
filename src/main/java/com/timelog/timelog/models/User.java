@@ -2,6 +2,8 @@ package com.timelog.timelog.models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -11,8 +13,12 @@ public class User {
     @Id
     public String id;
 
+
+    @Indexed
     public String firstName;
-    public String lastName;
+
+    @Indexed public String lastName;
+
     public String email;
     public String password;
 }

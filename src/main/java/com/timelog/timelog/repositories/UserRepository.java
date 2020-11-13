@@ -16,14 +16,12 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<List<User>> findByIdList(Set<String> userList);
 
     @Query("{ $text: { $search: ?0 } }")
-    Optional<List<User>> searchByFirstNameOrLastName(String search, Pageable pageable);
-
-//    Page<User> findByFirstNameOrLastNameOrEmail(String firstName, String lastName, String email, Pageable pageable);
+    Page<User> searchUsers(String search, Pageable pageable);
 
     Page<User> findByFirstNameOrLastNameOrEmail(String firstName, String lastName, String email, Pageable pageable);
 
-//    Page<User> findByFirstNameAndLastNameAndEmailAndId(String searchText, Pageable pageable);
+    Page<User> findByFirstNameAndLastNameAndEmailAndId(String firstName, String lastName, String email, String id, Pageable pageable);
 
-    Page<User> findByFirstName(String firstName, Pageable pageable);
+    Page<User> findByFirstName(String lastName, Pageable pageable);
 
 }
