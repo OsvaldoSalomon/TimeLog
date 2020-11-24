@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,9 +42,6 @@ public class UserController {
 
     @GetMapping(USERS_PATH)
     public ResponseEntity<Map<String, Object>> getUsers(
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String email,
             @RequestParam(required = false) String searchText,
             @RequestParam(required = false/*, defaultValue = "0"*/) Integer page,
             @RequestParam(required = false/*, defaultValue = "3"*/) Integer size,
@@ -74,12 +72,13 @@ public class UserController {
             }
 
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
+            TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
 
             Page<User> pageUsers;
             if (searchText == null)
                 pageUsers = userRepository.findAll(pagingSort);
             else
-                pageUsers = userRepository.findByFirstName(searchText, pagingSort);
+                pageUsers = userRepository.findAllBy(criteria, pagingSort);
 
             users = pageUsers.getContent();
 
@@ -109,7 +108,6 @@ public class UserController {
         }
         return new ResponseEntity<>(optionalResponse.get(), HttpStatus.OK);
     }
-    
 
     @PostMapping(USERS_PATH)
     public @ResponseBody
