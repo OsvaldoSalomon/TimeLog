@@ -51,14 +51,11 @@ public class UserController {
             List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
             if (sort[0].contains(",")) {
-                // will sort more than 2 fields
-                // sortOrder="field, direction"
                 for (String sortOrder : sort) {
                     String[] _sort = sortOrder.split(",");
                     orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
                 }
             } else {
-                // sort=[field, direction]
                 orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
             }
 
@@ -72,13 +69,14 @@ public class UserController {
             }
 
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
-            TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
 
             Page<User> pageUsers;
             if (searchText == null)
                 pageUsers = userRepository.findAll(pagingSort);
-            else
-                pageUsers = userRepository.findAllBy(criteria, pagingSort);
+            else {
+                TextCriteria search = TextCriteria.forDefaultLanguage().matching(searchText);
+                pageUsers = userRepository.findAllBy(search, pagingSort);
+            }
 
             users = pageUsers.getContent();
 
