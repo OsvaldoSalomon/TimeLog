@@ -14,3 +14,11 @@ db.users.insertMany([{_id: 'U001', firstName: 'John', lastName: 'Doe', email: 'd
 
 
 
+For future references this is how I created the index for users in MongoDB
+db.users.createIndex({
+  firstName : "text",
+  lastName: "text"
+},
+{
+  weights: { firstName : 1, lastName:1 }
+})

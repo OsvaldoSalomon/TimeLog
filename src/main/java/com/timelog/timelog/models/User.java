@@ -22,5 +22,9 @@ public class User {
     @TextScore
     public Float textScore;
 
+    public String email;
+
+    public String password;
+
 
 }
