@@ -17,4 +17,10 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Page<User> findAllBy(TextCriteria criteria, Pageable pageable);
 
+    Optional<User> findByUsername(String username);
+
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
+
 }

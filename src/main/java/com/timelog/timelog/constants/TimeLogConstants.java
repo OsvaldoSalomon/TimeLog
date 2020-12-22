@@ -10,6 +10,10 @@ public class TimeLogConstants {
 
     public static final String COMPANIES_PATH   = "/companies";
 
+    public static final String SIGNUP_PATH   = "/signup";
+
+    public static final String SIGNIN_PATH   = "/signin";
+
     public static final String PROJECTS_PATH    = "/projects";
 
     public static final String USERS_PATH    = "/users";
